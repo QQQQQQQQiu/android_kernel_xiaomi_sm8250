@@ -79,7 +79,14 @@ if [ "$ENABLE_KSU" -eq 1 ]; then
     echo " [*] Initializing KernelSU (ReSukiSU) Setup"
     echo "==========================================="
     echo "[*] Downloading and running ReSukiSU remote setup script..."
-    curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
+    # Pin ReSukiSU to the last commit compatible with the in-tree SuSFS v2.2.0.
+    # Upstream commit 03b60f26 ("kernel: sync with latest susfs") switched the
+    # hooks to susfs_{set,clear,is}_current_proc_no_su() and
+    # susfs_set_current_proc_umounted_for_zygote_next(), which do not exist in
+    # SuSFS v2.2.0, causing "undefined symbol" errors at vmlinux link time.
+    # Re-pin to a newer commit ONLY after syncing the kernel SuSFS code.
+    RESUKISU_REF="b2ac2fc8703ce9f5226e2a38a59f8b72f8a3005c"
+    curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash -s "$RESUKISU_REF"
     echo "[+] KernelSU setup finished."
 fi
 
