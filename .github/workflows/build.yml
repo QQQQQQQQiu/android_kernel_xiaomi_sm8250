@@ -14,6 +14,7 @@ on:
         options:
           - alioth
           - lmi
+          - dagu
       ksu:
         description: 'Enable KernelSU (BakaSU)'
         required: true
@@ -34,9 +35,7 @@ on:
         type: boolean
         default: true
 
-  schedule:
-    - cron: '13 12 * * 1-6'
-    - cron: '59 14 * * 0'
+  
 
 env:
   CCACHE_DIR: ~/.cache/ccache_mikernel
